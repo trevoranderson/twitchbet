@@ -1,0 +1,12 @@
+{
+    "name": "AmiiboBetter",
+    "version": "0.0.0",
+    "description": "AmiiboBetter",
+    "main": "app.js",
+    "dependencies": {
+        "lodash": "latest",
+        "colors": "latest",
+        "irc": "latest",
+        "mongoose": "latest"
+    }
+}
