@@ -9,3 +9,11 @@ var getDistribution = module.exports.getDistribution = function getDistribution(
     });
     return ret;
 }
+// Convert an array to an object
+var arrToObj = module.exports.arrToObj = function arrToObj(arr, keyGen) {
+    var ret = {};
+    _.each(arr, function (e) { 
+        ret[keyGen(e)] = e;
+    });
+    return ret;
+}
