@@ -6,8 +6,7 @@ var config = require('./config.js');
 var userDB = require('./models/userModel.js');
 var chatDB = require('./models/chatModel.js');
 var mongoose = require('mongoose');
-mongoose.connect(config.dburl, function (err)
-{ }); // connect to our database
+mongoose.connect(config.dburl, function (err) { }); // connect to our database
 var settings = {
     channels : config.channels,
     server : "irc.twitch.tv",
@@ -57,6 +56,7 @@ client.addListener("message", function (nick, channelname, message, opts, undf) 
             // JTV doesn't give any useful information
         }
         else {
+            console.log(nick + " " + message);
             var cname = "#" + message.split(" ").pop();
             var randuser = Math.random().toString(36).slice(2);
             unconfirmedMods[randuser] = cname;
@@ -91,7 +91,7 @@ client.addListener("message", function (nick, channelname, message, opts, undf) 
             if (command.length === 3) {
                 Channels[channelname].makeBet(nick, command[2], command[1]);
             }
-            else if (command.length === 2) { 
+            else if (command.length === 2) {
                 // Check the bet of arg2
                 Channels[channelname].checkBet(command[1].toLowerCase(), output.say);
             }
@@ -110,8 +110,24 @@ client.addListener("message", function (nick, channelname, message, opts, undf) 
             output.say(channelname, "Commands: !coins to check balance. !bet #amount #player to bet on a player (if gamble is open). !ticket to buy a raffle ticket (if raffle is open). !bid to bid on an auction (if one is open)");
             break;
         case "!help":
-            if (!commands[1]) {
-                output.say(channelname, "Help commands coming soon Kappa. Check out !commands for basic info.");
+            if (!command[1]) {
+                output.say(channelname, "Commands ('!help [command]' for more info): bet, ticket, bid, coins");
+            }
+            else {
+                switch (command[1]) {
+                    case "bet": case "gamble":
+                        output.say(channelname, "Usage (while bets haven't been distributed): '!bet' to check your current bet, '!bet [username]' to check someone elses, and '!bet [amount] [name]' to place a bet. Only one bet can be placed at a time. Total bet pool is divided among bet winners according to the proportion they bid on the winner.");
+                        break;
+                    case "ticket": case "raffle":
+                        output.say(channelname, "Usage (while raffle is open): '!ticket [amount]' to buy tickets. Each ticket is a chance to win!");
+                        break;
+                    case "bid": case "auction":
+                        output.say(channelname, "Usage (while auction is open): '!bid [amount]' to bid. Only counts if you bid more than anyone before you. Highest bidder wins when auction is closed.");
+                        break;
+                    case "coins": case "coin":
+                        output.say(channelname, "Usage: '!coins' to check your balance (will show amount committed to bets/raffles/auctions) or '!coins [user]' to see the coins for an online user. Gain coins just by watching the stream!");
+                        break;
+                }
             }
             break;
     }

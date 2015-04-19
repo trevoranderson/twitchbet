@@ -1,7 +1,9 @@
 ﻿// timed function queue. Runs a maximum of 1 function per max frequency
 module.exports = function (maxfreq) {
-    var lastmessage = 0;
-    var queue = [];
+    var lastmessage = 0; // Timestamp of last message sent
+    var queue = []; // Functions waiting to be run
+    // Manages the queue if it has more than zero elements in it.
+    // Checks are necessary since it calls itself until empty
     function Q_Manager() {
         if (queue.length && (new Date().getTime() - lastmessage) > maxfreq) {
             var fun = queue.shift();
